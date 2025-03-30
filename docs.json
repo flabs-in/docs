@@ -4,8 +4,8 @@
   "name": "Flabs Developer Platform APIs",
   "colors": {
     "primary": "#3E72EB",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "light": "#3E72EB",
+    "dark": "#3E72EB"
   },
   "favicon": "/favicon.svg",
   "navigation": {
@@ -14,12 +14,8 @@
         "tab": "Guides",
         "groups": [
           {
-            "group": "Get Started",
-            "pages": [
-              "introduction",
-              "quickstart",
-              "development"
-            ]
+            "group": "Flabs Developer API guide",
+            "pages": ["introduction", "quickstart", "development"]
           },
           {
             "group": "Essentials",
@@ -39,9 +35,7 @@
         "groups": [
           {
             "group": "API Documentation",
-            "pages": [
-              "api-reference/introduction"
-            ]
+            "pages": ["api-reference/introduction"]
           },
           {
             "group": "Endpoint Examples",
@@ -58,19 +52,14 @@
     "global": {
       "anchors": [
         {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
+          "anchor": "Visit Website",
+          "href": "https://flabslis.com",
           "icon": "book-open-cover"
         },
         {
-          "anchor": "Community",
-          "href": "https://mintlify.com/community",
-          "icon": "slack"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
+          "anchor": "Contact Us",
+          "href": "mailto:hello@flabs.in",
+          "icon": "link"
         }
       ]
     }
