@@ -57,7 +57,7 @@
                     },
                     "refreshToken": {
                       "type": "string",
-                      "description": "Refresh Token will expires after 7 days of inactivity; used to obtain new authentication tokens"
+                      "description": "Refresh Token will expires after 30 days of inactivity; used to obtain new authentication tokens"
                     },
                     "expiresIn": {
                       "type": "integer",
@@ -197,7 +197,7 @@
                     },
                     "refreshToken": {
                       "type": "string",
-                      "description": "Refresh Token will expires after 7 days of inactivity; used to obtain new authentication tokens"
+                      "description": "Refresh Token will expires after 30 days of inactivity; used to obtain new authentication tokens"
                     },
                     "expiresIn": {
                       "type": "integer",
