@@ -7,12 +7,12 @@
   },
   "servers": [
     {
-      "url": "https://v2staging.flabs.in",
-      "description": "Staging Server"
-    },
-    {
       "url": "https://v2.flabs.in",
       "description": "Production Server"
+    },
+    {
+      "url": "https://v2staging.flabs.in",
+      "description": "Staging Server"
     }
   ],
   "paths": {
