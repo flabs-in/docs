@@ -1,0 +1,67 @@
+---
+title: "Patient APIs Introduction"
+description: "APIs for patient authentication and report retrieval"
+---
+
+<img
+  className="block dark:hidden"
+  src="/logo/light.svg"
+  alt="Flabs Logo Light"
+/>
+<img className="hidden dark:block" src="/logo/dark.svg" alt="Flabs Logo Dark" />
+
+## Overview
+
+Flabs Patient APIs allow you to authenticate patients via OTP and retrieve their medical reports securely.
+
+<CardGroup cols={3}>
+  <Card title="Request OTP" icon="message" href="/patient/endpoint/get_otp">
+    Send OTP to patient's contact number
+  </Card>
+  <Card
+    title="Verify OTP"
+    icon="shield-check"
+    href="/patient/endpoint/verify_otp"
+  >
+    Verify OTP and get patient token
+  </Card>
+  <Card
+    title="Get Reports"
+    icon="file-medical"
+    href="/patient/endpoint/get_records"
+  >
+    Retrieve all patient reports
+  </Card>
+</CardGroup>
+
+## Patient Authentication Flow
+
+Our patient authentication system uses a two-step verification process:
+
+1. **Request OTP**: Send an OTP to the patient's contact number
+2. **Verify OTP**: Validate the OTP to receive a patient token
+3. **Access Reports**: Use the patient token to access patient-specific reports
+
+<Note>
+  All API requests require both the lab authentication token (in the
+  Authorization header) and for the reports endpoint, the patient token (in the
+  patient-authorization header).
+</Note>
+
+## Getting Started
+
+To integrate with our patient authentication system:
+
+1. Authenticate your lab client using the Auth API
+2. Request an OTP for the patient using the [getLoginOTP](/patient/endpoint/get_otp) endpoint
+3. Have the patient verify the OTP using the [verifyLoginOTP](/patient/endpoint/verify_otp) endpoint
+4. Retrieve the patient's reports using the [getReports](/patient/endpoint/get_records) endpoint
+
+## Security
+
+Patient data is secure and can only be accessed with:
+
+- A valid lab authentication token
+- A valid patient-specific token obtained through OTP verification
+
+This dual authentication ensures that only authorized labs can access patient data, and only for patients who have verified their identity.

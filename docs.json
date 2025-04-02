@@ -11,22 +11,11 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "Documentation",
         "groups": [
           {
             "group": "Flabs Developer API guide",
-            "pages": ["introduction", "quickstart", "development"]
-          },
-          {
-            "group": "Essentials",
-            "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/settings",
-              "essentials/navigation",
-              "essentials/reusable-snippets"
-            ]
+            "pages": ["introduction"]
           }
         ]
       },
@@ -34,16 +23,26 @@
         "tab": "API Reference",
         "groups": [
           {
-            "group": "API Documentation",
-            "pages": ["api-reference/introduction"]
+            "group": "Authorization",
+            "pages": [
+              "auth/introduction",
+              "auth/endpoint/get_auth_token",
+              "auth/endpoint/get_auth_token_refresh"
+            ]
           },
           {
-            "group": "Endpoint Examples",
+            "group": "Patient Reports",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "patient/introduction",
+              {
+                "group": "Patient Login",
+                "icon": "right-to-bracket",
+                "pages": [
+                  "patient/endpoint/get_otp",
+                  "patient/endpoint/verify_otp"
+                ]
+              },
+              "patient/endpoint/get_records"
             ]
           }
         ]

@@ -1,0 +1,49 @@
+---
+title: "Authentication APIs"
+description: "APIs for client authentication and token management"
+---
+
+<img
+  className="block dark:hidden"
+  src="/logo/light.svg"
+  alt="Flabs Logo Light"
+/>
+<img className="hidden dark:block" src="/logo/dark.svg" alt="Flabs Logo Dark" />
+
+## Overview
+
+Flabs authentication APIs allow you to securely authenticate clients and manage tokens for API access.
+
+<CardGroup cols={2}>
+  <Card title="Generate Token" icon="key" href="/auth/endpoint/get_auth_token">
+    Get auth tokens using client credentials
+  </Card>
+  <Card
+    title="Refresh Token"
+    icon="arrows-rotate"
+    href="/auth/endpoint/get_auth_token_refresh"
+  >
+    Refresh your auth token when it expires
+  </Card>
+</CardGroup>
+
+## Authentication Flow
+
+Our authentication system uses a two-token approach:
+
+1. **Auth Token**: Valid for 10 minutes, used for API requests
+2. **Refresh Token**: Expires after 7 days of inactivity; used to obtain new authentication tokens.
+
+<Note>
+  All authentication tokens should be included in the Authorization header using
+  the Bearer scheme.
+</Note>
+
+## Getting Started
+
+To integrate with our authentication system:
+
+1. Obtain client credentials (Client ID and Client Secret)
+2. Generate an initial auth token using the [token endpoint](/auth/endpoint/get_auth_token)
+3. Store both tokens securely
+4. When the auth token expires, use the [refresh endpoint](/auth/endpoint/get_auth_token_refresh) to get the auth token again with logging again.

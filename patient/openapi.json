@@ -1,0 +1,440 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Patient API",
+    "version": "1.0.0",
+    "description": "APIs for patient authentication and report retrieval."
+  },
+  "servers": [
+    {
+      "url": "https://v2staging.flabs.in",
+      "description": "Staging Server"
+    },
+    {
+      "url": "https://v2.flabs.in",
+      "description": "Production Server"
+    }
+  ],
+  "paths": {
+    "/client/patient/getLoginOTP": {
+      "post": {
+        "summary": "Get login OTP",
+        "description": "Sends an OTP to the provided contact number for patient verification.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "contact": {
+                    "type": "string",
+                    "description": "Patient's contact number should be 10 digits long"
+                  }
+                },
+                "required": ["contact"]
+              },
+              "example": {
+                "contact": "contact"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "otpToken": {
+                      "type": "string",
+                      "description": "Token required for OTP verification"
+                    }
+                  }
+                },
+                "example": {
+                  "otpToken": "otp-token"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "details": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "status": 400,
+                  "message": "Bad Request",
+                  "error": {
+                    "details": "Invalid contact number format"
+                  }
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "details": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "status": 500,
+                  "message": "Internal Server Error",
+                  "error": {
+                    "details": "An unexpected error occurred"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/client/patient/verifyLoginOTP": {
+      "post": {
+        "summary": "Verify login OTP",
+        "description": "Verifies the OTP sent to the patient's contact number.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "otp": {
+                    "type": "string",
+                    "description": "OTP received by the patient"
+                  },
+                  "otpToken": {
+                    "type": "string",
+                    "description": "Token received from getLoginOTP API"
+                  }
+                },
+                "required": ["otp", "otpToken"]
+              },
+              "example": {
+                "otp": "123456",
+                "otpToken": "otp-token"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "patientToken": {
+                      "type": "string",
+                      "description": "JWT token for patient authentication"
+                    }
+                  }
+                },
+                "example": {
+                  "patientToken": "patient-token"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "details": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "status": 401,
+                  "message": "Unauthorized",
+                  "error": {
+                    "details": "Invalid OTP"
+                  }
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "details": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "status": 500,
+                  "message": "Internal Server Error",
+                  "error": {
+                    "details": "An unexpected error occurred"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/client/patient/getReports": {
+      "get": {
+        "summary": "Get patient reports",
+        "description": "Retrieves all reports for a patient registered through the client lab.",
+        "security": [
+          {
+            "bearerAuth": [],
+            "patientAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "_id": {
+                        "type": "string",
+                        "description": "Unique identifier for the report"
+                      },
+                      "reportUrl": {
+                        "type": "string",
+                        "description": "URL to download the report PDF"
+                      },
+                      "reportDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Date when the report was generated"
+                      },
+                      "labName": {
+                        "type": "string",
+                        "description": "Name of the laboratory"
+                      },
+                      "patientName": {
+                        "type": "string",
+                        "description": "Name of the patient"
+                      },
+                      "tests": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "List of tests included in the report"
+                      }
+                    }
+                  }
+                },
+                "example": [
+                  {
+                    "reportUrl": "report-url",
+                    "reportDate": "2023-10-01T12:00:00Z",
+                    "labName": "Lab Name",
+                    "patientName": "John Doe",
+                    "tests": ["Test 1", "Test 2"],
+                    "_id": "unique-id"
+                  }
+                ]
+              }
+            }
+          },
+          "4XX": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "details": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "status": 401,
+                  "message": "Unauthorized",
+                  "error": {
+                    "details": "Invalid patient token"
+                  }
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "details": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "status": 500,
+                  "message": "Internal Server Error",
+                  "error": {
+                    "details": "An unexpected error occurred"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Authorization token obtained from the auth API"
+      },
+      "patientAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "patient-authorization",
+        "description": "Patient token in format: Bearer {patientToken}"
+      }
+    }
+  }
+}

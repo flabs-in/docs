@@ -6,58 +6,64 @@ description: "Welcome to the documentation of Flabs developer platform APIs"
 <img className="block dark:hidden" src="/logo/light.svg" alt="Hero Light" />
 <img className="hidden dark:block" src="/logo/dark.svg" alt="Hero Dark" />
 
-## Setting up
+## Overview
 
-The first step to world-class documentation is setting up your editing environments.
+Welcome to Flabs API documentation. Our APIs allow labs to integrate with the Flabs platform to create a seamless experience for managing patient data, reports, and lab workflows.
+
+## Authentication
+
+All Flabs APIs use token-based authentication. To access our APIs, you'll need:
+
+1. **Client ID**: A unique identifier for your lab
+2. **Client Secret**: A secret key provided to authenticate your lab
+
+These credentials must be kept secure and should never be exposed in client-side code or public repositories.
+
+<Note>
+  To obtain your Client ID and Client Secret, please contact our support team at
+  hello@flabs.in
+</Note>
+
+## API Overview
 
 <CardGroup cols={2}>
-  <Card
-    title="Edit Your Docs"
-    icon="pen-to-square"
-    href="https://mintlify.com/docs/quickstart"
-  >
-    Get your docs set up locally for easy development
+  <Card title="Authentication" icon="key" href="/auth/introduction">
+    Authenticate your lab to access Flabs APIs
   </Card>
-  <Card
-    title="Preview Changes"
-    icon="image"
-    href="https://mintlify.com/docs/development"
-  >
-    Preview your changes before you push to make sure they're perfect
+  <Card title="Patient APIs" icon="user" href="/patient/introduction">
+    Manage patient authentication and report access
   </Card>
 </CardGroup>
 
-## Make it yours
+## Getting Started
 
-Update your docs to your brand and add valuable content for the best user conversion.
+Follow these steps to integrate with the Flabs platform:
 
-<CardGroup cols={2}>
-  <Card
-    title="Customize Style"
-    icon="palette"
-    href="https://mintlify.com/docs/settings/global"
-  >
-    Customize your docs to your company's colors and brands
-  </Card>
-  <Card
-    title="Reference APIs"
-    icon="code"
-    href="https://mintlify.com/docs/api-playground/openapi"
-  >
-    Automatically generate endpoints from an OpenAPI spec
-  </Card>
-  <Card
-    title="Add Components"
-    icon="screwdriver-wrench"
-    href="https://mintlify.com/docs/content/components/accordions"
-  >
-    Build interactive features and designs to guide your users
-  </Card>
-  <Card
-    title="Get Inspiration"
-    icon="stars"
-    href="https://mintlify.com/customers"
-  >
-    Check out our showcase of our favorite documentation
-  </Card>
-</CardGroup>
+### 1. Obtain Credentials
+
+Contact our support team to get your Client ID and Client Secret.
+
+### 2. Generate Authentication Token
+
+Use your credentials to obtain an authentication token through our authentication endpoint.
+
+### 3. Use the Token in API Requests
+
+Include the token in the Authorization header of your API requests.
+
+## Error Handling
+
+All Flabs APIs follow a consistent error format that includes success status, error code, message, and detailed information when available.
+
+## Rate Limiting
+
+To ensure system stability, our APIs implement rate limiting. If you exceed the limits, you'll receive a `429 Too Many Requests` response.
+
+## Support
+
+For any questions or issues regarding the API integration, please contact:
+
+- Email: hello@flabs.in
+- Phone: +91 8929759545
+
+Our tech team is available Monday to Friday, 9 AM to 6 PM IST.
