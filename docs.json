@@ -87,5 +87,8 @@
       "linkedin": "https://www.linkedin.com/company/flabs-in/",
       "instagram": "https://www.instagram.com/flabs.official"
     }
+  },
+  "seo": {
+    "indexing": "all"
   }
 }
