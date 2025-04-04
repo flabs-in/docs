@@ -166,18 +166,14 @@
                   "clientID": {
                     "type": "string"
                   },
-                  "clientSecret": {
-                    "type": "string"
-                  },
                   "refreshToken": {
                     "type": "string"
                   }
                 },
-                "required": ["clientID", "clientSecret", "refreshToken"]
+                "required": ["clientID", "refreshToken"]
               },
               "example": {
                 "clientID": "your-client-id",
-                "clientSecret": "your-client-secret",
                 "refreshToken": "your-refresh-token"
               }
             }
