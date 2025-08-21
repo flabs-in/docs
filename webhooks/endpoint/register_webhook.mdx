@@ -1,0 +1,30 @@
+---
+title: "Register Webhook"
+openapi: "POST /client/events/subscribe"
+---
+
+## Overview
+
+Register your application to receive webhook notifications for specific events in the Flabs system. This endpoint allows you to subscribe to real-time notifications when bills or reports are created, completed, or deleted.
+
+## Authentication
+
+This endpoint requires a valid Bearer token obtained from the [authentication API](/auth/endpoint/get_auth_token).
+
+## Request Parameters
+
+All parameters are sent in the request body as JSON:
+
+| Parameter   | Type   | Required | Description                                                  |
+| ----------- | ------ | -------- | ------------------------------------------------------------ |
+| `events`    | array  | Yes      | List of event types to subscribe to                          |
+| `endpoint`  | string | Yes      | Your webhook endpoint URL (must use HTTPS)                   |
+| `protocol`  | string | Yes      | Protocol for webhook delivery (only "https" is supported)    |
+| `authToken` | string | No       | Optional authentication token to include in webhook requests |
+
+### Supported Events
+
+- `bill.created` - New bill created
+- `bill.completed` - Entire bill completed (all reports finished)
+- `bill.deleted` - Bill deleted from system
+- `report.completed` - Individual report completed

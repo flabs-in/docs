@@ -1,0 +1,58 @@
+---
+title: "Create Pre-booking"
+openapi: "POST /client/billing/create"
+---
+
+## Overview
+
+Create a pre-booking in the Flabs system to initiate the laboratory workflow. This endpoint accepts patient details and test/package information to start the billing process.
+
+## Authentication
+
+Requires a valid Bearer token from the [authentication API](/auth/endpoint/get_auth_token).
+
+## Request Parameters
+
+### Required Fields
+
+| Field                        | Type    | Description                                                 |
+| ---------------------------- | ------- | ----------------------------------------------------------- |
+| `patient_details`            | object  | Patient information (required)                              |
+| `patient_details.first_name` | string  | Patient's first name                                        |
+| `patient_details.gender`     | string  | Patient's gender (`male`, `female`, `other`)                |
+| `patient_details.age`        | integer | Patient's age                                               |
+| `patient_details.age_type`   | string  | Age unit (`year`, `month`, `day`)                           |
+| `integrator_id`              | string  | Your unique identifier for this booking                     |
+| `lead_source`                | string  | Source of the booking (contact Flabs for available sources) |
+
+### Test/Package Requirements
+
+At least one of the following is required:
+
+| Field               | Type  | Description                                      |
+| ------------------- | ----- | ------------------------------------------------ |
+| `mapped_tests`      | array | Tests mapped with Flabs (use `flabs_id` or `id`) |
+| `unmapped_tests`    | array | Tests not mapped with Flabs                      |
+| `mapped_packages`   | array | Packages mapped with Flabs (use `id` only)       |
+| `unmapped_packages` | array | Packages not mapped with Flabs                   |
+
+### Optional Fields
+
+| Field                       | Type   | Description               |
+| --------------------------- | ------ | ------------------------- |
+| `barCode`                   | string | Unique barcode identifier |
+| `patient_details.last_name` | string | Patient's last name       |
+
+## Important Notes
+
+<Warning>
+  - Patient details are mandatory with all required fields - At least one test
+  or package array must be provided - Barcodes must be unique across the system
+  - Contact Flabs team for available lead sources
+</Warning>
+
+<Note>
+  - Use `flabs_id` or `id` for mapped tests - Only `id` is available for mapped
+  packages (no `flabs_id`) - The `preBookingID` in the response is used to track
+  the booking through the workflow
+</Note>

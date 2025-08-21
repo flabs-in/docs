@@ -1,0 +1,277 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Billing API",
+    "version": "1.0.0",
+    "description": "APIs for creating pre-bookings and managing the billing workflow in the Flabs system."
+  },
+  "servers": [
+    {
+      "url": "https://v2.flabs.in",
+      "description": "Production Server"
+    },
+    {
+      "url": "https://v2staging.flabs.in",
+      "description": "Staging Server"
+    }
+  ],
+  "paths": {
+    "/client/billing/create": {
+      "post": {
+        "summary": "Create pre-booking",
+        "description": "Create a pre-booking in the Flabs system with patient details and test/package information. This initiates the billing workflow.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "patient_details": {
+                    "type": "object",
+                    "properties": {
+                      "first_name": {
+                        "type": "string",
+                        "description": "Patient's first name"
+                      },
+                      "last_name": {
+                        "type": "string",
+                        "description": "Patient's last name (optional)"
+                      },
+                      "gender": {
+                        "type": "string",
+                        "enum": ["male", "female", "other"],
+                        "description": "Patient's gender"
+                      },
+                      "age": {
+                        "type": "integer",
+                        "description": "Patient's age"
+                      },
+                      "age_type": {
+                        "type": "string",
+                        "enum": ["year", "month", "day"],
+                        "description": "Age unit type"
+                      }
+                    },
+                    "required": ["first_name", "gender", "age", "age_type"]
+                  },
+                  "integrator_id": {
+                    "type": "string",
+                    "description": "Your unique identifier for this booking"
+                  },
+                  "unmapped_tests": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Tests not mapped between your system and Flabs"
+                  },
+                  "mapped_tests": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "flabs_id": {
+                          "type": "string",
+                          "description": "Flabs test identifier"
+                        },
+                        "id": {
+                          "type": "string",
+                          "description": "Alternative test identifier"
+                        }
+                      }
+                    },
+                    "description": "Tests mapped with Flabs system"
+                  },
+                  "mapped_packages": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "Package identifier"
+                        }
+                      },
+                      "required": ["id"]
+                    },
+                    "description": "Packages mapped with Flabs system"
+                  },
+                  "unmapped_packages": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Packages not mapped between your system and Flabs"
+                  },
+                  "lead_source": {
+                    "type": "string",
+                    "description": "Source of the lead (contact Flabs team for available sources)"
+                  },
+                  "barCode": {
+                    "type": "string",
+                    "description": "Optional barcode (must be unique)"
+                  }
+                },
+                "required": ["patient_details", "integrator_id", "lead_source"]
+              },
+              "example": {
+                "patient_details": {
+                  "first_name": "name",
+                  "last_name": "surname",
+                  "gender": "male",
+                  "age": 24,
+                  "age_type": "year"
+                },
+                "integrator_id": "your_unique_integrator_id",
+                "unmapped_tests": ["unmapped test name"],
+                "mapped_tests": [
+                  {
+                    "flabs_id": "FLABSTESTID"
+                  },
+                  {
+                    "id": "test_id"
+                  }
+                ],
+                "mapped_packages": [
+                  {
+                    "id": "package_id"
+                  }
+                ],
+                "unmapped_packages": ["unmapped package name"],
+                "lead_source": "<lead source>"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Pre-booking created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Booking created successfully"
+                    },
+                    "integrator_id": {
+                      "type": "string",
+                      "description": "Your unique integrator ID"
+                    },
+                    "preBookingID": {
+                      "type": "string",
+                      "description": "Flabs pre-booking identifier"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "message": "Booking created successfully",
+                  "integrator_id": "your_unique_integrator_id",
+                  "preBookingID": "pre_booking_id"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "details": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "status": 400,
+                  "message": "Bad Request",
+                  "error": {
+                    "details": "Barcode already exists or invalid request data"
+                  }
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "details": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "status": 500,
+                  "message": "Internal Server Error",
+                  "error": {
+                    "details": "An unexpected error occurred"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "JWT token obtained from the authentication endpoint"
+      }
+    }
+  }
+}

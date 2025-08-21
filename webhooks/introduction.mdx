@@ -1,0 +1,119 @@
+# Webhooks
+
+Webhooks allow you to receive real-time notifications when specific events occur in the Flabs system. Instead of repeatedly polling our API to check for updates, webhooks will automatically send HTTP POST requests to your specified endpoint whenever subscribed events happen.
+
+## Overview
+
+Webhooks are HTTP callbacks that Flabs sends to your application when certain events occur. This enables you to:
+
+- Get instant notifications when bills or reports are completed
+- Automate workflows based on bill lifecycle events
+- Reduce API polling and improve system efficiency
+- Build real-time integrations with the Flabs platform
+
+## Supported Events
+
+Flabs supports the following webhook events:
+
+### Bill Events
+
+- **`bill.created`** - Triggered when a new bill is created in the system
+- **`bill.completed`** - Triggered when all reports in a bill are completed and the entire bill is finalized
+- **`bill.deleted`** - Triggered when a bill is deleted from the system
+
+### Report Events
+
+- **`report.completed`** - Triggered when an individual report within a bill is completed
+
+<Note>
+  Each bill consists of multiple reports. The `bill.completed` event is only
+  triggered when all reports within that bill are finished, while
+  `report.completed` is triggered for each individual report as it gets
+  completed.
+</Note>
+
+## Security Requirements
+
+- **HTTPS Only**: All webhook endpoints must use HTTPS protocol for security
+- **Authentication**: Bearer token authentication is required to register webhooks
+- **Endpoint Validation**: Your webhook endpoint must be publicly accessible and return appropriate HTTP status codes
+
+## Webhook Payload Structure
+
+When an event occurs, Flabs will send a POST request to your registered endpoint with the following structure:
+
+```json
+{
+  "labID": "lab_67890",
+  "eventType": "bill.completed",
+  "eventTime": 1705747800,
+  "data": {
+    "billID": "bill_12345",
+    "integratorID": "your_unique_integrator_id",
+    "billData": {
+      "status": "completed",
+      "testData": [
+        {
+          "_id": "test_001",
+          "status": "completed"
+        },
+        {
+          "_id": "test_002",
+          "status": "completed"
+        }
+      ]
+    },
+    "reportURL": "https://reports.flabs.in/bill/bill_12345"
+  }
+}
+```
+
+### Payload Fields
+
+| Field                             | Type    | Description                                                                  |
+| --------------------------------- | ------- | ---------------------------------------------------------------------------- |
+| `labID`                           | string  | Unique identifier for the laboratory                                         |
+| `eventType`                       | string  | Type of event (bill.created, bill.completed, bill.deleted, report.completed) |
+| `eventTime`                       | integer | Unix timestamp when the event occurred                                       |
+| `data.billID`                     | string  | Unique identifier for the bill                                               |
+| `data.integratorID`               | string  | Your unique integrator ID (set when creating bill via API)                   |
+| `data.billData.status`            | string  | Current status of the bill                                                   |
+| `data.billData.testData`          | array   | Array of test/report data within the bill                                    |
+| `data.billData.testData[]._id`    | string  | Unique identifier for each test/report                                       |
+| `data.billData.testData[].status` | string  | Status of individual test/report                                             |
+| `data.reportURL`                  | string  | URL to access the complete bill report                                       |
+
+<Note>
+  The `integratorID` field contains your unique identifier that you provide when
+  creating a bill through the Create Bill API. This helps you correlate webhook
+  events with your internal records.
+</Note>
+
+## Getting Started
+
+1. **Get an Auth Token**: Use the [authentication endpoints](/auth/introduction) to obtain a Bearer token
+2. **Register Your Webhook**: Use the [webhook registration endpoint](/webhooks/endpoint/register_webhook) to subscribe to events
+3. **Handle Webhook Requests**: Implement an endpoint on your server to receive and process webhook notifications
+4. **Verify Webhooks**: Validate incoming webhook requests using the optional auth token
+
+## Best Practices
+
+- Always respond with a `2xx` status code to acknowledge receipt
+- Implement proper error handling and retry logic
+- Use HTTPS endpoints for security
+- Validate webhook authenticity using the auth token
+- Process webhooks asynchronously to avoid timeouts
+- Implement idempotency to handle duplicate deliveries
+
+## Retry Policy
+
+Webhook deliveries are subject to the following retry mechanism:
+
+- Maximum of 3 retry attempts for failed deliveries
+- 2-minute interval between each retry attempt
+- After 3 failed retries, you must contact Flabs support to get that webhook event
+
+<Warning>
+  Ensure your webhook endpoint responds quickly (within 10 seconds) to avoid
+  timeouts.
+</Warning>

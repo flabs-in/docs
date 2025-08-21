@@ -1,0 +1,472 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Webhooks API",
+    "version": "1.0.0",
+    "description": "APIs for managing webhook to receive real-time notifications about bill and report events."
+  },
+  "servers": [
+    {
+      "url": "https://v2.flabs.in",
+      "description": "Production Server"
+    },
+    {
+      "url": "https://v2staging.flabs.in",
+      "description": "Staging Server"
+    }
+  ],
+  "paths": {
+    "/client/events/subscribe": {
+      "post": {
+        "summary": "Register webhook",
+        "description": "Subscribe to webhook events to receive real-time notifications when bills or reports are created, completed, or deleted.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "events": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "bill.created",
+                        "bill.deleted",
+                        "bill.completed",
+                        "report.completed"
+                      ]
+                    },
+                    "description": "List of events to subscribe to"
+                  },
+                  "endpoint": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "Your webhook endpoint URL that will receive the event notifications"
+                  },
+                  "protocol": {
+                    "type": "string",
+                    "enum": ["https"],
+                    "description": "Protocol for webhook delivery (only HTTPS is supported)"
+                  }
+                },
+                "required": ["events", "endpoint", "protocol"]
+              },
+              "example": {
+                "events": ["bill.completed"],
+                "endpoint": "https://your-domain.com/webhooks/flabs",
+                "protocol": "https",
+                "authToken": "your-webhook-auth-token"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful webhook",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Events subscribed successfully"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "message": "Events subscribed successfully"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "details": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "status": 401,
+                  "message": "Unauthorized",
+                  "error": {
+                    "details": "Invalid client credentials"
+                  }
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "details": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "status": 500,
+                  "message": "Internal Server Error",
+                  "error": {
+                    "details": "An unexpected error occurred"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/client/events/getAllEvents": {
+      "get": {
+        "summary": "Get all webhook",
+        "description": "Retrieve all active webhook for your account, including event types, protocols, and metadata.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved webhook",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Subscribed events fetched successfully"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "_id": {
+                            "type": "string",
+                            "description": "Unique identifier for the webhook"
+                          },
+                          "events": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "enum": [
+                                "bill.created",
+                                "bill.deleted",
+                                "bill.completed",
+                                "report.completed"
+                              ]
+                            },
+                            "description": "List of subscribed event types"
+                          },
+                          "protocol": {
+                            "type": "string",
+                            "enum": ["https"],
+                            "description": "Protocol used for webhook delivery"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "ISO 8601 timestamp when was created"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "ISO 8601 timestamp when was last updated"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "message": "Subscribed events fetched successfully",
+                  "data": [
+                    {
+                      "_id": "<unique id>",
+                      "events": ["bill.completed"],
+                      "protocol": "https",
+                      "createdAt": "2025-08-21T08:57:49.700Z",
+                      "updatedAt": "2025-08-21T08:57:49.700Z"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "details": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "status": 401,
+                  "message": "Unauthorized",
+                  "error": {
+                    "details": "Invalid client credentials"
+                  }
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "details": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "status": 500,
+                  "message": "Internal Server Error",
+                  "error": {
+                    "details": "An unexpected error occurred"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/client/events/deleteEvent/{id}": {
+      "delete": {
+        "summary": "Delete webhook",
+        "description": "Delete a specific webhook by its unique identifier. This will permanently remove the and stop all webhook deliveries for that.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the webhook to delete",
+            "schema": {
+              "type": "string"
+            },
+            "example": "68a51f702b9a428dce0da5e2"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted webhook",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Subscribed event deleted successfully"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "message": "Subscribed event deleted successfully"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "details": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "status": 401,
+                  "message": "Unauthorized",
+                  "error": {
+                    "details": "Invalid client credentials"
+                  }
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "status": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "details": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "status": 500,
+                  "message": "Internal Server Error",
+                  "error": {
+                    "details": "An unexpected error occurred"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "JWT token obtained from the authentication endpoint"
+      }
+    }
+  }
+}

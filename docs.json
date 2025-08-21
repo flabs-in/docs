@@ -31,6 +31,19 @@
             ]
           },
           {
+            "group": "Webhooks",
+            "pages": [
+              "webhooks/introduction",
+              "webhooks/endpoint/register_webhook",
+              "webhooks/endpoint/get_all_webhooks",
+              "webhooks/endpoint/delete_webhook"
+            ]
+          },
+          {
+            "group": "Billing",
+            "pages": ["billing/introduction", "billing/endpoint/create_bill"]
+          },
+          {
             "group": "Patient Reports",
             "pages": [
               "patient/introduction",
