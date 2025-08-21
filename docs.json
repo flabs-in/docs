@@ -7,6 +7,12 @@
     "light": "#3E72EB",
     "dark": "#3E72EB"
   },
+  "icons": {
+    "library": "fontawesome"
+  },
+  "contextual": {
+    "options": ["copy", "view", "chatgpt", "claude"]
+  },
   "favicon": "/favicon.svg",
   "navigation": {
     "tabs": [
